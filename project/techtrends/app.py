@@ -76,7 +76,19 @@ def create():
 # Define the healthz endpoint
 @app.route('/healthz')
 def return_healthz():
-    return jsonify({"status": "OK - healthy"})
+    db_conn_alive = True
+    try:
+        connection = get_db_connection()
+        post = connection.execute('SELECT * FROM posts LIMIT 1').fetchone()
+    except sqlite3.OperationalError as e:
+        if e.args[0].startswith('no such table'):
+            db_conn_alive = False
+    finally:
+        connection.close()
+    if db_conn_alive:
+        return jsonify({"status": "OK - healthy"})
+    else:
+        return jsonify({"status": "ERROR - unhealthy"}), 500
 
 # Define the metrics endpoint
 @app.route('/metrics')
