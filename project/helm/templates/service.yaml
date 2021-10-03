@@ -2,16 +2,16 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: nginx
+    app: {{ .Values.image.repository }}
     tag: {{ .Values.image.tag }}
-  name: nginx-alpine
+  name: {{ .Values.image.repository }}
   namespace: {{ .Values.namespace.name }}
 spec:
   ports:
   - port: {{ .Values.services.port }}
-    protocol: TCP
-    targetPort: {{ .Values.services.port }}
+    protocol: {{ .Values.services.protocol }}
+    targetPort: {{ .Values.services.targetPort }}
   selector:
-    app: nginx
-    tag: alpine
+    app: {{ .Values.image.repository }}
+    tag: {{ .Values.image.tag }}
   type: {{ .Values.services.type }}

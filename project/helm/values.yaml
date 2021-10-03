@@ -1,20 +1,24 @@
 namespace:
-  name: demo
+  name: sandbox
  
 image:
-  repository: nginx
-  tag: alpine
+  repository: techtrends
+  tag: latest
   pullPolicy: IfNotPresent
 
+replicaCount: 1
+
 resources:
-  cpu: 50m
-  memory: 256Mi
+  requests:
+      cpu: 250m
+      memory: 64Mi
+  limits:
+      cpu: 500m
+      memory: 128Mi
 
 services:
+  port: 4111
+  targetPort: 3111
+  protocol: TCP
   type: ClusterIP
-  port: 8111
 
-configmap:
-  data: "version: alpine"
-
-replicaCount: 3
