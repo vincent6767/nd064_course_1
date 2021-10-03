@@ -1,19 +1,19 @@
 namespace:
   name: prod
-
-replicaCount: 2
  
 image:
-  tag: 1.17.0
+  pullPolicy: Always
+
+replicaCount: 5
 
 resources:
-  cpu: 70m
-  memory: 256Mi
+  requests:
+      cpu: 350m
+      memory: 128Mi
+  limits:
+      cpu: 500m
+      memory: 256Mi
 
 services:
-  type: ClusterIP
-  port: 80
-
-configmap:
-  data: "version: 1.17.0"
+  port: 7111
 

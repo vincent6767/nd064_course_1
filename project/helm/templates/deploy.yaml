@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.image.repository }}
+    tag: {{ .Values.image.tag }}
+  name: {{ .Values.image.repository }}
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.image.repository }}
+      tag: {{ .Values.image.tag }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.image.repository }}
+        tag: {{ .Values.image.tag }}
+    spec:
+      containers:
+      - image: vincentbiasa6767/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Values.image.repository }}
+        ports:
+        - containerPort: {{ .Values.services.targetPort }}
+        resources:
+          requests:
+            memory: {{ .Values.resources.requests.memory }}
+            cpu: {{ .Values.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
+            cpu: {{ .Values.resources.limits.cpu }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.services.targetPort }}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.services.targetPort }}
